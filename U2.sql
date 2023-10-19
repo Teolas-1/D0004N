@@ -1,7 +1,7 @@
 drop database if exists hotell;
 create database hotell;
 
---Gäst
+#Gäst
 create table hotell.gast(
   gast_id               int  unsigned    unique    not null,
   namn                  varchar(40) not null,
@@ -11,11 +11,10 @@ create table hotell.gast(
   addr                  varchar(40) not null,
 
   primary key(gast_id)
-  on delete no action
-  on update cascade
+
 );
 
---Bokning_Gäster
+#Bokning_Gäster
 create table hotell.bokning_gaster(
   bg_id     int  unsigned unique not null,
   gast_id   int  unsigned not null,
@@ -24,13 +23,13 @@ create table hotell.bokning_gaster(
 
   primary key(bg_id),
 
-  foreign key(gast_id) references hotell.gast(gast_id)
+  foreign key(gast_id) references hotell.gast(gast_id),
   foreign key(bok_id) references hotell.bokning_rum(bok_id)
   on delete no action
   on update cascade
 );
 
---Bokning
+#Bokning
 create table hotell.bokning_rum(
   bok_id        int  unsigned unique not null,
   gast_id       int  unsigned not null,
@@ -45,42 +44,72 @@ create table hotell.bokning_rum(
   on update cascade
 );
 
---Rum
+#Rum
 create table hotell.rum(
   rum_nr     int  unsigned unique not null,
-  typ   varchar(15) not null,
+  typ_id    int unsigned not null,
   upptaget  boolean not null,
   stadad    boolean not null,
   anst_id   int not null,
 
   primary key(rum_nr),
 
-  foreign key(anst_id) references hotell.anstallda(anst_id)
+  foreign key(anst_id) references hotell.anstallda(anst_id),
+  foreign key(typ_id) references hotell.rum_typ(typ_id)
+  on delete no action
+  on update cascade
+);
+
+#Rumstyp
+create table hotell.rum_typ(
+  typ_id     int  unsigned unique not null,
+  namn       varchar(20),
+  pris_natt  double unsigned,
+
+
+  primary key(typ_id),
+
+
+);
+
+#Ett erbjudande för en typ av rum
+create table hotell.erbjudande(
+  erb_id     int  unsigned unique not null,
+  typ_id     int unsigned not null,
+  period_fr  date not null,
+  period_ti  date not null,
+  pris_natt  double unsigned not null,
+
+  primary key(erb_id),
+
+  foreign key(typ_id) references hotell.anstallda(typ_id)
   on delete no action
   on update cascade
 );
 
 
+#in- och utcheckning
 create table hotell.in_ut_checkning(
   check_id       int  unsigned unique not null,
   in_check_tid   date not null,
   in_check_tid   date not null,
-  in_tid         timestamp, -- Null innan inchecning gjorts
-  ut_tid         timestamp, --Null innan utchening gjorts
+  in_tid         timestamp, # Null innan inchecning gjorts
+  ut_tid         timestamp, #Null innan utchening gjorts
   bg_id          int not null,
-  in_anst_id     int, --Null innan inceckning
-  ut_anst_id     int, --Null innan utceckning
+  in_anst_id     int, #Null innan inceckning
+  ut_anst_id     int, #Null innan utceckning
 
   primary key(check_id),
 
-  foreign key(bg_id) references hotell.bokning(bg_id)
-  foreign key(in_anst_id) references hotell.anstallda(anst_id)
+  foreign key(bg_id) references hotell.bokning(bg_id),
+  foreign key(in_anst_id) references hotell.anstallda(anst_id),
   foreign key(ut_anst_id) references hotell.anstallda(anst_id)
+  
   on delete no action
   on update cascade
 );
 
-
+#Anställd på hotellet
 create table hotell.anstallda(
   anst_id     int  unsigned unique not null,
   pers_nr int not null,
@@ -97,20 +126,20 @@ create table hotell.anstallda(
 
   primary key(anst_id),
 
-  on delete no action
-  on update cascade
 );
 
+#Skift 
 create table hotell.skift(
   skift_id     int  unsigned unique not null,
   anst_id      int  unsigned not null,
   start        date not null,
   slut         date not null,
-  tid          double unsigned not null,
+  tid          double unsigned not null, #Tid i timmar
 
   primary key(skift_id),
 
   foreign key(anst_id) references hotell.anstallda(anst_id)
+  
   on delete no action
   on update cascade
 );
@@ -125,8 +154,9 @@ create table hotell.bokning_res(
 
   primary key(bok_id),
 
-  foreign key(bg_id) references hotell.bokning_gaster(bg_id)
+  foreign key(bg_id) references hotell.bokning_gaster(bg_id),
   foreign key(gast_id) references hotell.gaster(gast_id)
+  
   on delete no action
   on update cascade
 );
@@ -139,16 +169,17 @@ create table hotell.betalning(
 
   primary key(betalning_id),
 
-  foreign key(bok_id) references hotell.bokning(bok_id)
-  foreign key(gast_id) references hotell.gaster(gast_id)
+  foreign key(bok_id) references hotell.bokning(bok_id),
+  foreign key(gast_id) references hotell.gaster(gast_id),
   foreign key(anst_id) references hotell.anstallda(anst_id)
+  
   on delete no action
   on update cascade
 );
 
 
 
---Butiken
+#/////////  Butiken ////////////
 drop database if exists butik;
 create database butik;
 
@@ -161,8 +192,6 @@ create table butik.produkt(
 
     primary key(produkt_id)
 
-    on delete no action
-    on update cascade
 );
 
 create table butik.kop_produkt(
@@ -170,7 +199,7 @@ create table butik.kop_produkt(
     produkt_id  int unsigned,
 
     primary key(kp_id),
-    foreign key(produkt_id) references butik.produkt(produkt_id),
+    foreign key(produkt_id) references butik.produkt(produkt_id)
 
     on delete no action
     on update cascade
@@ -182,7 +211,8 @@ create table butik.kop(
   summa   double unsigned not null,
 
   primary key(kop_id),
-  foreign key(kp_id) references butik.produkt(kp_id),
+  foreign key(kp_id) references butik.produkt(kp_id)
+  
   on delete no action
   on update cascade
 );
