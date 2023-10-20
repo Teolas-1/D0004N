@@ -34,6 +34,19 @@ INSERT INTO hotell.anstallda(
     1
 );
 
+INSERT INTO hotell.anstallda(
+    "199403134387",
+    "Charlie",
+    "butiken@hotelhedvig.se",
+    "Gatugatan 5",
+    "Butikspersonal",
+    1.0,
+    "2020-09-23",
+    0,
+    0,
+    1
+);
+
 
 INSERT INTO hotell.rum_typ(
     1,

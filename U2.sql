@@ -87,12 +87,12 @@ create table hotell.erbjudande(
 );
 
 
-# in och utcheckning
+#in- och utcheckning
 create table hotell.in_ut_checkning(
   check_id       int  unsigned unique not null AUTO_INCREMENT,
-  in_check_tid   date not null,
-  in_check_tid   date not null,
-  in_tid         timestamp, # Null innan incheckning gjorts
+  in_check_tid   timestamp not null, #Tid incheckning ska ske senast
+  ut_check_tid   timestamp not null, #Tid utcheckning ska ske senast
+  in_tid         timestamp, # Null innan inchecning gjorts
   ut_tid         timestamp, #Null innan utchening gjorts
   bg_id          int not null,
   in_anst_id     int, #Null innan inceckning
