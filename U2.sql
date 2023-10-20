@@ -17,13 +17,12 @@ create table hotell.gast(
 #Bokning_Gäster
 create table hotell.bokning_gaster(
   bg_id     int  unsigned unique not null,
-  gast_id   int  unsigned not null,
   rum_nr    int not null,
   bok_id    int not null,
 
   primary key(bg_id),
 
-  foreign key(gast_id) references hotell.gast(gast_id),
+  foreign key(rum_nr) references hotell.rum(rum_nr),
   foreign key(bok_id) references hotell.bokning_rum(bok_id)
   on delete no action
   on update cascade
@@ -67,7 +66,7 @@ create table hotell.rum_typ(
   pris_natt  double unsigned,
 
 
-  primary key(typ_id),
+  primary key(typ_id)
 
 
 );
@@ -82,7 +81,7 @@ create table hotell.erbjudande(
 
   primary key(erb_id),
 
-  foreign key(typ_id) references hotell.anstallda(typ_id)
+  foreign key(typ_id) references hotell.rum_typ(typ_id)
   on delete no action
   on update cascade
 );
@@ -101,7 +100,7 @@ create table hotell.in_ut_checkning(
 
   primary key(check_id),
 
-  foreign key(bg_id) references hotell.bokning(bg_id),
+  foreign key(bg_id) references hotell.bokning_gaster(bg_id),
   foreign key(in_anst_id) references hotell.anstallda(anst_id),
   foreign key(ut_anst_id) references hotell.anstallda(anst_id)
   
@@ -124,7 +123,7 @@ create table hotell.anstallda(
   forb_semester double unsigned not null,
   sk_tab int not null,
 
-  primary key(anst_id),
+  primary key(anst_id)
 
 );
 
@@ -145,17 +144,16 @@ create table hotell.skift(
 );
 
 create table hotell.bokning_res(
-  bok_id     int  unsigned unique not null,
-  gast_id    int not null,
-  bg_id      int unsigned,
+  res_bok_id     int  unsigned unique not null,
+  bord_nr 	int not null,
+  bok_id   int not null,
   gast_antal int not null,
   datum      date not null,
   betald     boolean not null,
 
-  primary key(bok_id),
+  primary key(res_bok_id),
 
-  foreign key(bg_id) references hotell.bokning_gaster(bg_id),
-  foreign key(gast_id) references hotell.gaster(gast_id)
+  foreign key(bok_id) references hotell.bokning_rum(bok_id)
   
   on delete no action
   on update cascade
@@ -165,12 +163,11 @@ create table hotell.betalning(
   betalning_id     int  unsigned unique not null,
   bok_id           int not null,
   anst_id          int not null,
-  gast_id          int not null,
+  pris 			   double unsigned not null, #Tas från pris_natt för rummet/rummen x antal nätter räknat via in/utcheckningen
 
   primary key(betalning_id),
 
-  foreign key(bok_id) references hotell.bokning(bok_id),
-  foreign key(gast_id) references hotell.gaster(gast_id),
+  foreign key(bok_id) references hotell.bokning_rum(bok_id),
   foreign key(anst_id) references hotell.anstallda(anst_id)
   
   on delete no action
@@ -211,7 +208,7 @@ create table butik.kop(
   summa   double unsigned not null,
 
   primary key(kop_id),
-  foreign key(kp_id) references butik.produkt(kp_id)
+  foreign key(kp_id) references butik.kop_produkt(kp_id)
   
   on delete no action
   on update cascade
