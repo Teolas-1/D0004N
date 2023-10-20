@@ -3,9 +3,9 @@ create database hotell;
 
 #Gäst
 create table hotell.gast(
-  gast_id               int  unsigned    unique    not null,
+  gast_id               int  unsigned    unique    not null AUTO_INCREMENT,
   namn                  varchar(40) not null,
-  tel                   int not null,
+  tel                   VARCHAR(20) not null,
   mail                  varchar(40) not null,
   stam                  boolean not null,
   addr                  varchar(40) not null,
@@ -16,7 +16,7 @@ create table hotell.gast(
 
 #Bokning_Gäster
 create table hotell.bokning_gaster(
-  bg_id     int  unsigned unique not null,
+  bg_id     int  unsigned unique not null AUTO_INCREMENT,
   rum_nr    int not null,
   bok_id    int not null,
 
@@ -30,7 +30,7 @@ create table hotell.bokning_gaster(
 
 #Bokning
 create table hotell.bokning_rum(
-  bok_id        int  unsigned unique not null,
+  bok_id        int  unsigned unique not null AUTO_INCREMENT,
   gast_id       int  unsigned not null,
   gast_antal    int not null,
   bok_datum     date not null,
@@ -73,7 +73,7 @@ create table hotell.rum_typ(
 
 #Ett erbjudande för en typ av rum
 create table hotell.erbjudande(
-  erb_id     int  unsigned unique not null,
+  erb_id     int  unsigned unique not null AUTO_INCREMENT,
   typ_id     int unsigned not null,
   period_fr  date not null,
   period_ti  date not null,
@@ -87,12 +87,12 @@ create table hotell.erbjudande(
 );
 
 
-#in- och utcheckning
+# in och utcheckning
 create table hotell.in_ut_checkning(
-  check_id       int  unsigned unique not null,
+  check_id       int  unsigned unique not null AUTO_INCREMENT,
   in_check_tid   date not null,
   in_check_tid   date not null,
-  in_tid         timestamp, # Null innan inchecning gjorts
+  in_tid         timestamp, # Null innan incheckning gjorts
   ut_tid         timestamp, #Null innan utchening gjorts
   bg_id          int not null,
   in_anst_id     int, #Null innan inceckning
@@ -110,8 +110,8 @@ create table hotell.in_ut_checkning(
 
 #Anställd på hotellet
 create table hotell.anstallda(
-  anst_id     int  unsigned unique not null,
-  pers_nr int not null,
+  anst_id     int  unsigned unique not null AUTO_INCREMENT,
+  pers_nr varchar(12) not null,
   namn  varchar(20) not null,
   tel   int not null,
   mail  varchar(40) not null,
@@ -129,7 +129,7 @@ create table hotell.anstallda(
 
 #Skift 
 create table hotell.skift(
-  skift_id     int  unsigned unique not null,
+  skift_id     int  unsigned unique not null AUTO_INCREMENT,
   anst_id      int  unsigned not null,
   start        date not null,
   slut         date not null,
@@ -144,7 +144,7 @@ create table hotell.skift(
 );
 
 create table hotell.bokning_res(
-  res_bok_id     int  unsigned unique not null,
+  res_bok_id     int  unsigned unique not null AUTO_INCREMENT,
   bord_nr 	int not null,
   bok_id   int not null,
   gast_antal int not null,
@@ -160,7 +160,7 @@ create table hotell.bokning_res(
 );
 
 create table hotell.betalning(
-  betalning_id     int  unsigned unique not null,
+  betalning_id     int  unsigned unique not null AUTO_INCREMENT,
   bok_id           int not null,
   anst_id          int not null,
   pris 			   double unsigned not null, #Tas från pris_natt för rummet/rummen x antal nätter räknat via in/utcheckningen
@@ -182,7 +182,7 @@ create database butik;
 
 
 create table butik.produkt(
-    produkt_id  int unsigned unique not null,
+    produkt_id  int unsigned unique not null AUTO_INCREMENT,
     produktnamn varchar(20) not null,
     antal_lager int not null,
     pris        double unsigned not null,
@@ -192,7 +192,7 @@ create table butik.produkt(
 );
 
 create table butik.kop_produkt(
-    kp_id       int unsigned unique not null,
+    kp_id       int unsigned unique not null AUTO_INCREMENT,
     produkt_id  int unsigned,
 
     primary key(kp_id),
@@ -203,7 +203,7 @@ create table butik.kop_produkt(
 );
 
 create table butik.kop(
-  kop_id  int unsigned unique not null,
+  kop_id  int unsigned unique not null AUTO_INCREMENT,
   kp_id   int unsigned not null,
   summa   double unsigned not null,
 
