@@ -131,8 +131,8 @@ create table hotell.anstallda(
 create table hotell.skift(
   skift_id     int  unsigned unique not null AUTO_INCREMENT,
   anst_id      int  unsigned not null,
-  start        date not null,
-  slut         date not null,
+  start        datetime not null, #Tid och dag 
+  slut         datetime not null, 
   tid          double unsigned not null, #Tid i timmar
 
   primary key(skift_id),
